@@ -9,6 +9,8 @@
 
   <link rel="stylesheet" href="style/normalize.css">
   <link rel="stylesheet" href="style/style.css">
+
+  <script src="scripts/script.js" defer></script>
 </head>
 
 <body>
@@ -53,12 +55,12 @@
             <form class="calc__form">
               <label class="calc__label calc__label_input">
                 <span class="calc__text">Доход от физических лиц</span>
-                <input class="calc__input" type="number" name="a">
+                <input class="calc__input" type="number" name="psysicalPerson">
               </label>
 
               <label class="calc__label calc__label_input">
                 <span class="calc__text">Доход от юридических лиц</span>
-                <input class="calc__input" type="number" name="b">
+                <input class="calc__input" type="number" name="legalPerson">
               </label>
 
               <!-- <label class="calc__label calc__label_checkbox">
@@ -78,7 +80,7 @@
 
             <div class="result__block">
               <p class="result__caption">Налог</p>
-              <p class="result__tax">0</p>
+              <p class="result__tax result__tax_total">0</p>
             </div>
 
             <!-- <div class="result__block">
@@ -299,24 +301,24 @@
             <form class="calc__form">
               <div class="calc__radio-wrapper">
                 <label class="calc__label calc__label_radio">
-                  <input class="calc__radio" type="radio" name="type" checked>
+                  <input class="calc__radio" type="radio" name="type" value="income" checked>
                   <span class="calc__text">Доходы</span>
                 </label>
 
                 <label class="calc__label calc__label_radio">
-                  <input class="calc__radio" type="radio" name="type">
+                  <input class="calc__radio" type="radio" name="type" value="expenses">
                   <span class="calc__text">Доходы минус расходы</span>
                 </label>
               </div>
 
               <label class="calc__label calc__label_input">
                 <span class="calc__text">Доходы</span>
-                <input class="calc__input" type="number" name="a">
+                <input class="calc__input" type="number" name="income">
               </label>
 
-              <label class="calc__label calc__label_input">
+              <label class="calc__label calc__label_input calc__label_expenses">
                 <span class="calc__text">Расходы</span>
-                <input class="calc__input" type="number" name="b">
+                <input class="calc__input" type="number" name="expenses">
               </label>
             </form>
           </div>
@@ -326,7 +328,7 @@
 
             <div class="result__block">
               <p class="result__caption">Налог</p>
-              <p class="result__tax">0</p>
+              <p class="result__tax result__tax_total">0</p>
             </div>
           </div>
         </div>
