@@ -6,7 +6,7 @@ navigationLinks.forEach((elem) => {
     e.preventDefault();
     navigationLinks.forEach((elem) => {
       elem.classList.remove('navigation__link_active');
-    })
+    });
 
     calcElems.forEach((calcElem) => {
       if (elem.dataset.tax === calcElem.dataset.tax){
@@ -15,9 +15,9 @@ navigationLinks.forEach((elem) => {
       } else {
         calcElem.classList.remove('calc_active');
       }
-    })
-  })
-})
+    });
+  });
+});
 
 // for (let i = 0; i < navigationLinks.length; i++) {+
 //   navigationLinks[i].addEventListener('click', (e) => {
@@ -33,6 +33,8 @@ navigationLinks.forEach((elem) => {
 //     }
 //   })
 // }
+
+// АУСН
 
 const ausn = document.querySelector('.ausn');
 const formAusn = ausn.querySelector('.calc__form');
@@ -52,16 +54,19 @@ formAusn.addEventListener('input', () => {
     calcLabelExpenses.style.display = 'block';
     resultTaxTotal.textContent = ((formAusn.income.value - formAusn.expenses.value) * 0.2).toFixed(2);
   }
-})
+});
+
+// Самозанятый + ИП НПД
 
 const selfEmployment = document.querySelector('.self-employment');
 const formSelfEmployment = selfEmployment.querySelector('.calc__form');
 const resultTaxTotalSelfEmployment = selfEmployment.querySelector('.result__tax_total');
 
-selfEmployment.addEventListener('input', () => {
+formSelfEmployment.addEventListener('input', () => {
   resultTaxTotalSelfEmployment.textContent = ((formSelfEmployment.psysicalPerson.value * 0.04)
     + (formSelfEmployment.legalPerson.value * 0.06)).toFixed(2);
-} )
+});
+
 
 
 
