@@ -58,7 +58,7 @@ const selfEmployment = document.querySelector('.self-employment');
 const formSelfEmployment = selfEmployment.querySelector('.calc__form');
 const resultTaxTotalSelfEmployment = selfEmployment.querySelector('.result__tax_total');
 
-formSelfEmployment.addEventListener('input', () => {
+selfEmployment.addEventListener('input', () => {
   resultTaxTotalSelfEmployment.textContent = ((formSelfEmployment.psysicalPerson.value * 0.04)
     + (formSelfEmployment.legalPerson.value * 0.06)).toFixed(2);
 } )
