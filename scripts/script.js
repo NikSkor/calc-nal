@@ -195,3 +195,101 @@ const formatCurrency = number =>
   });
 };
 
+//УСН
+{
+  const LIMIT = 300_000;
+  const usn = document.querySelector('.usn');
+  const formUsn = usn.querySelector('.calc__form');
+
+  const calcLabelExpenses = usn.querySelector('.calc__label_expenses');
+  const calcLabelProperty = usn.querySelector('.calc__label_property');
+  const resultBlockProperty = usn.querySelector('.result__block_property');
+
+  const resultTaxTotal = usn.querySelector('.result__tax_total');
+  const resultTaxProperty = usn.querySelector('.result__tax_property');
+
+  const checkShopProperty = (typeTax) => {
+    switch (typeTax) {
+      case 'income': {
+        calcLabelExpenses.style.display = 'none';
+        calcLabelProperty.style.display = 'none';
+        resultBlockProperty.style.display = 'none';
+
+        formUsn.expenses.value = '';
+        formUsn.property.value = '';
+        break;
+      };
+      case 'ip-expenses': {
+        calcLabelExpenses.style.display = '';
+        calcLabelProperty.style.display = 'none';
+        resultBlockProperty.style.display = 'none';
+
+        formUsn.property.value = '';
+        break;
+      };
+      case 'ooo-expenses': {
+        calcLabelExpenses.style.display = '';
+        calcLabelProperty.style.display = '';
+        resultBlockProperty.style.display = '';
+        break;
+      };
+    }
+  }
+  //? Другой вариант
+  // const typeTax = {
+  //   'income': () => {
+  //     calcLabelExpenses.style.display = 'none';
+  //     calcLabelProperty.style.display = 'none';
+  //     resultBlockProperty.style.display = 'none';
+
+  //     formUsn.expenses.value = '';
+  //     formUsn.property.value = '';
+  //   },
+  //   'ip-expenses': () => {
+  //     calcLabelExpenses.style.display = '';
+  //     calcLabelProperty.style.display = 'none';
+  //     resultBlockProperty.style.display = 'none';
+
+  //     formUsn.property.value = '';
+  //   },
+  //   'ooo-expenses': () => {
+  //     calcLabelExpenses.style.display = '';
+  //     calcLabelProperty.style.display = '';
+  //     resultBlockProperty.style.display = '';
+  //   }
+  // }
+  // typeTax[formUsn.typeTax.value]();
+
+  const percent = {
+    'income': 0.06,
+    'ip-expenses': 0.15,
+    'ooo-expenses': 0.15,
+  }
+
+  checkShopProperty(formUsn.typeTax.value);
+  formUsn.addEventListener('input', () => {
+    checkShopProperty(formUsn.typeTax.value);
+
+    const income = formUsn.income.value;
+    const expenses = formUsn.expenses.value;
+    const contributions = formUsn.contributions.value;
+    const property = formUsn.property.value;
+
+    let profit = income - contributions;
+
+    if(formUsn.typeTax.value != 'income') {
+      profit -= expenses;
+    }
+    
+    const taxBigIncome = income > LIMIT ? (profit - LIMIT) * 0.01 : 0;
+
+    const summ = profit - (taxBigIncome < 0 ? 0 : taxBigIncome);
+
+    const tax = summ * percent[formUsn.typeTax.value];
+
+    const taxProperty = property * 0.02;
+
+    resultTaxTotal.textContent = formatCurrency(tax);
+    resultTaxProperty.textContent = formatCurrency(taxProperty);
+  });
+};
