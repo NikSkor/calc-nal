@@ -64,15 +64,18 @@ const formatCurrency = number =>
   calcLabelExpenses.style.display = 'none';
 
   formAusn.addEventListener('input', () => {
+    const income = +formAusn.income.value;
     if(formAusn.type.value === 'income') {
       calcLabelExpenses.style.display = 'none';
-      resultTaxTotal.textContent = formatCurrency(formAusn.income.value * 0.08);
+      resultTaxTotal.textContent = formatCurrency(income * 0.08);
       formAusn.expenses.value = '';
     }
 
     if(formAusn.type.value === 'expenses') {
+      const expenses = +formAusn.expenses.value;
+      const profit = income < expenses ? 0 : income - expenses;
       calcLabelExpenses.style.display = '';
-      resultTaxTotal.textContent = formatCurrency((formAusn.income.value - formAusn.expenses.value) * 0.2);
+      resultTaxTotal.textContent = formatCurrency(profit * 0.2);
     }
   });
 };
@@ -108,20 +111,23 @@ const formatCurrency = number =>
   checkCompensation();
 
   formSelfEmployment.addEventListener('input', () => {
-    const resPsysicalPerson = formSelfEmployment.psysicalPerson.value * 0.04;
-    const resLegalPerson = formSelfEmployment.legalPerson.value * 0.06;
+    const psysicalPerson = +formSelfEmployment.psysicalPerson.value;
+    const legalPerson = +formSelfEmployment.legalPerson.value;
+
+    const resPsysicalPerson = psysicalPerson * 0.04;
+    const resLegalPerson = legalPerson * 0.06;
 
     checkCompensation();
 
     const tax = resPsysicalPerson + resLegalPerson;
     formSelfEmployment.compensation.value =
-      formSelfEmployment.compensation.value > 10_000
+      +formSelfEmployment.compensation.value > 10_000
       ? 10_000
-      : formSelfEmployment.compensation.value;
+      : +formSelfEmployment.compensation.value;
 
-    const benefit = formSelfEmployment.compensation.value;
-    const resBenefit = formSelfEmployment.psysicalPerson.value * 0.01
-      + formSelfEmployment.legalPerson.value * 0.02;
+    const benefit = +formSelfEmployment.compensation.value;
+    const resBenefit = psysicalPerson * 0.01
+      + legalPerson * 0.02;
     const finalBenefit = benefit - resBenefit > 0 ? benefit - resBenefit : 0;
     const finalTax = tax - (benefit - finalBenefit);
 
@@ -169,12 +175,12 @@ const formatCurrency = number =>
   formOsno.addEventListener('input', () => {
     checkFormBusiness();
 
-    const income = formOsno.income.value;
-    const expenses = formOsno.expenses.value;
-    const property = formOsno.property.value;
+    const income = +formOsno.income.value;
+    const expenses = +formOsno.expenses.value;
+    const property = +formOsno.property.value;
 
     //Доход
-    const profit = income - expenses;
+    const profit = income < expenses ? 0 : income - expenses;
     //НДС
     const nds = income * 0.2;
     //налог на имущество
@@ -270,10 +276,10 @@ const formatCurrency = number =>
   formUsn.addEventListener('input', () => {
     checkShopProperty(formUsn.typeTax.value);
 
-    const income = formUsn.income.value;
-    const expenses = formUsn.expenses.value;
-    const contributions = formUsn.contributions.value;
-    const property = formUsn.property.value;
+    const income = +formUsn.income.value;
+    const expenses = +formUsn.expenses.value;
+    const contributions = +formUsn.contributions.value;
+    const property = +formUsn.property.value;
 
     let profit = income - contributions;
 
@@ -289,7 +295,7 @@ const formatCurrency = number =>
 
     const taxProperty = property * 0.02;
 
-    resultTaxTotal.textContent = formatCurrency(tax);
+    resultTaxTotal.textContent = formatCurrency(tax < 0 ? 0 : tax);
     resultTaxProperty.textContent = formatCurrency(taxProperty);
   });
 };
