@@ -77,6 +77,7 @@ const debounceTimer = (fn, msec) => {
   const formAusn = ausn.querySelector('.calc__form');
   const resultTaxTotal = ausn.querySelector('.result__tax_total');
   const calcLabelExpenses = ausn.querySelector('.calc__label_expenses');
+  const btnClear = ausn.querySelector('.calc__btn-reset');
 
   calcLabelExpenses.style.display = 'none';
 
@@ -95,6 +96,12 @@ const debounceTimer = (fn, msec) => {
       resultTaxTotal.textContent = formatCurrency(profit * 0.2);
     }
   }, 500));
+
+  btnClear.addEventListener('click', () => {
+    formAusn.reset();
+    resultTaxTotal.textContent = formatCurrency(0);
+    calcLabelExpenses.style.display = 'none';
+  })
 };
 
 
@@ -105,6 +112,7 @@ const debounceTimer = (fn, msec) => {
   const resultTaxTotalSelfEmployment = selfEmployment.querySelector('.result__tax_total');
   const calcCompensation = selfEmployment.querySelector('.calc__label_compensation');
   const resultBlockCompensation = selfEmployment.querySelectorAll('.result__block_compensation');
+  const btnClear = selfEmployment.querySelector('.calc__btn-reset');
 
   const resultTaxCompensation = selfEmployment.querySelector('.result__tax_compensation');
   const resultTaxRestCompensation = selfEmployment.querySelector('.result__tax_rest-compensation');
@@ -155,6 +163,17 @@ const debounceTimer = (fn, msec) => {
     resultTaxResult.textContent = formatCurrency(finalTax);
 
   }, 500));
+
+  btnClear.addEventListener('click', () => {
+    formSelfEmployment.reset();
+
+    resultTaxTotalSelfEmployment.textContent = formatCurrency(0);
+
+    resultTaxCompensation.textContent = formatCurrency(0);
+    resultTaxRestCompensation.textContent = formatCurrency(0);
+    resultTaxResult.textContent = formatCurrency(0);
+    checkCompensation();
+  });
 };
 
 
@@ -162,6 +181,7 @@ const debounceTimer = (fn, msec) => {
 {
   const osno = document.querySelector('.osno');
   const formOsno = osno.querySelector('.calc__form');
+  const btnClear = osno.querySelector('.calc__btn-reset');
 
   const ndflExpenses = osno.querySelector('.result__block_ndfl-expenses');
   const ndflIncome = osno.querySelector('.result__block_ndfl-income');
@@ -216,6 +236,16 @@ const debounceTimer = (fn, msec) => {
     resultTaxNdflIncome.textContent = formatCurrency(NdflIncomeTotal);
     resultTaxProfit.textContent = formatCurrency(taxProfit);
   }, 500));
+
+  btnClear.addEventListener('click', () => {
+    formOsno.reset();
+    checkFormBusiness();
+    resultTaxNds.textContent = formatCurrency(0);
+    resultTaxProperty.textContent = formatCurrency(0);
+    resultTaxNdflExpenses.textContent = formatCurrency(0);
+    resultTaxNdflIncome.textContent = formatCurrency(0);
+    resultTaxProfit.textContent = formatCurrency(0);
+  })
 };
 
 //УСН
@@ -223,6 +253,7 @@ const debounceTimer = (fn, msec) => {
   const LIMIT = 300_000;
   const usn = document.querySelector('.usn');
   const formUsn = usn.querySelector('.calc__form');
+  const btnClear = usn.querySelector('.calc__btn-reset');
 
   const calcLabelExpenses = usn.querySelector('.calc__label_expenses');
   const calcLabelProperty = usn.querySelector('.calc__label_property');
@@ -315,23 +346,29 @@ const debounceTimer = (fn, msec) => {
     resultTaxTotal.textContent = formatCurrency(tax < 0 ? 0 : tax);
     resultTaxProperty.textContent = formatCurrency(taxProperty);
   }, 500));
+
+  btnClear.addEventListener('click', () => {
+    formUsn.reset();
+    checkShopProperty(formUsn.typeTax.value);
+    resultTaxTotal.textContent = formatCurrency(0);
+    resultTaxProperty.textContent = formatCurrency(0);
+  })
 };
 
 //Налоговый вычет 13%
 {
   const taxReturn = document.querySelector('.tax-return');
   const formTaxReturn = taxReturn.querySelector('.calc__form');
+  const btnClear = taxReturn.querySelector('.calc__btn-reset');
 
   const resultTaxNdfl = taxReturn.querySelector('.result__tax_ndfl');
   const resultTaxPossible = taxReturn.querySelector('.result__tax_possible');
   const resultTaxDeduction = taxReturn.querySelector('.result__tax_deduction');
 
-  let timer;
   formTaxReturn.addEventListener('input', debounceTimer(()=> {
     const expenses = +formTaxReturn.expenses.value;
     const income = +formTaxReturn.income.value;
     const sumExpenses = +formTaxReturn.sumExpenses.value;
-    console.log('sumExpenses: ', sumExpenses);
 
     const ndfl = income * 0.13;
     const possibleDeduction = expenses < sumExpenses
@@ -343,4 +380,11 @@ const debounceTimer = (fn, msec) => {
     resultTaxPossible.textContent = formatCurrency(possibleDeduction);
     resultTaxDeduction.textContent = formatCurrency(deduction);
   }, 500));
+
+  btnClear.addEventListener('click', () => {
+    formTaxReturn.reset();
+    resultTaxNdfl.textContent = formatCurrency(0);
+    resultTaxPossible.textContent = formatCurrency(0);
+    resultTaxDeduction.textContent = formatCurrency(0);
+  })
 };
