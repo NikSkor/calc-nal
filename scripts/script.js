@@ -15,6 +15,23 @@ const formatCurrency = number =>
     maximumFractionDigits: 2,
   }).format(number);
 
+const debounceTimer = (fn, msec) => {
+  let lastCall = 0;
+  let lastCallTimer = NaN;
+  return (...args) => {
+    const previousCall = lastCall;
+    lastCall = Date.now();
+
+    if(previousCall && ((lastCall - previousCall) <= msec)) {
+      clearTimeout(lastCallTimer);
+    }
+
+    lastCallTimer = setTimeout( ()=> {
+      fn(...args);
+    }, msec)
+  }
+}
+
 //Навигация
 {
   const navigationLinks = document.querySelectorAll('.navigation__link');
@@ -63,7 +80,7 @@ const formatCurrency = number =>
 
   calcLabelExpenses.style.display = 'none';
 
-  formAusn.addEventListener('input', () => {
+  formAusn.addEventListener('input', debounceTimer(() => {
     const income = +formAusn.income.value;
     if(formAusn.type.value === 'income') {
       calcLabelExpenses.style.display = 'none';
@@ -77,7 +94,7 @@ const formatCurrency = number =>
       calcLabelExpenses.style.display = '';
       resultTaxTotal.textContent = formatCurrency(profit * 0.2);
     }
-  });
+  }, 500));
 };
 
 
@@ -110,7 +127,7 @@ const formatCurrency = number =>
 
   checkCompensation();
 
-  formSelfEmployment.addEventListener('input', () => {
+  formSelfEmployment.addEventListener('input', debounceTimer(() => {
     const psysicalPerson = +formSelfEmployment.psysicalPerson.value;
     const legalPerson = +formSelfEmployment.legalPerson.value;
 
@@ -137,7 +154,7 @@ const formatCurrency = number =>
     resultTaxRestCompensation.textContent = formatCurrency(finalBenefit);
     resultTaxResult.textContent = formatCurrency(finalTax);
 
-  });
+  }, 500));
 };
 
 
@@ -172,7 +189,7 @@ const formatCurrency = number =>
 
   checkFormBusiness();
 
-  formOsno.addEventListener('input', () => {
+  formOsno.addEventListener('input', debounceTimer(() => {
     checkFormBusiness();
 
     const income = +formOsno.income.value;
@@ -198,7 +215,7 @@ const formatCurrency = number =>
     resultTaxNdflExpenses.textContent = formatCurrency(ndflExpensesTotal);
     resultTaxNdflIncome.textContent = formatCurrency(NdflIncomeTotal);
     resultTaxProfit.textContent = formatCurrency(taxProfit);
-  });
+  }, 500));
 };
 
 //УСН
@@ -273,7 +290,7 @@ const formatCurrency = number =>
   }
 
   checkShopProperty(formUsn.typeTax.value);
-  formUsn.addEventListener('input', () => {
+  formUsn.addEventListener('input', debounceTimer(() => {
     checkShopProperty(formUsn.typeTax.value);
 
     const income = +formUsn.income.value;
@@ -297,7 +314,7 @@ const formatCurrency = number =>
 
     resultTaxTotal.textContent = formatCurrency(tax < 0 ? 0 : tax);
     resultTaxProperty.textContent = formatCurrency(taxProperty);
-  });
+  }, 500));
 };
 
 //Налоговый вычет 13%
@@ -309,7 +326,8 @@ const formatCurrency = number =>
   const resultTaxPossible = taxReturn.querySelector('.result__tax_possible');
   const resultTaxDeduction = taxReturn.querySelector('.result__tax_deduction');
 
-  formTaxReturn.addEventListener('input', ()=> {
+  let timer;
+  formTaxReturn.addEventListener('input', debounceTimer(()=> {
     const expenses = +formTaxReturn.expenses.value;
     const income = +formTaxReturn.income.value;
     const sumExpenses = +formTaxReturn.sumExpenses.value;
@@ -324,5 +342,5 @@ const formatCurrency = number =>
     resultTaxNdfl.textContent = formatCurrency(ndfl);
     resultTaxPossible.textContent = formatCurrency(possibleDeduction);
     resultTaxDeduction.textContent = formatCurrency(deduction);
-  })
-}
+  }, 500));
+};
